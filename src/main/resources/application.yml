@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: requesttracker
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/requesttrack?useSSL=false
+    username: root
+    password: Telliant@345
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+  mail:
+    host: smtp-relay.brevo.com
+    port: 587
+    username: aravinth.a@telliant.net
+    password: zFUY6CakfJgpD4R3
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+
+app:
+  jwtCookieName: Spring
+  jwtSecret: =================================Spring===========================
+  jwtExpirationMs: 600000
+
+# Additional properties...
