@@ -8,7 +8,7 @@ spring:
     show-sql: true
 
   datasource:
-    url: jdbc:mysql://avnadmin:AVNS_On7aJsdh-AHHoFWJy0P@mysql-384c46e4-requesttrack.a.aivencloud.com:25571/defaultdb?ssl-mode=REQUIRED
+    url: jdbc:mysql://avnadmin:AVNS_On7aJsdh-AHHoFWJy0P@mysql-384c46e4-requesttrack.a.aivencloud.com:25571/requesttrack?ssl-mode=REQUIRED
     username: avnadmin
     password: AVNS_On7aJsdh-AHHoFWJy0P
     driver-class-name: com.mysql.cj.jdbc.Driver
