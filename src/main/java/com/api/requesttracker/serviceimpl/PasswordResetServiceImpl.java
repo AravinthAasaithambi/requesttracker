@@ -1,12 +1,12 @@
 package com.api.requesttracker.serviceimpl;
 
-import com.api.requesttracker.dto.PasswordResetRequestDTO;
 import com.api.requesttracker.entity.User;
 import com.api.requesttracker.repository.UserRepository;
 import com.api.requesttracker.services.EmailService;
 import com.api.requesttracker.services.PasswordResetService;
 import com.api.requesttracker.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,6 +82,25 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     private String encodePassword(String rawPassword) {
         // Use BCryptPasswordEncoder to encode the password
         return encoder.encode(rawPassword);
+    }
+
+    @Override
+    public ResponseEntity<?> changePassword(Long userId, String newPassword) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setPassword(encoder.encode(newPassword));
+            userRepository.save(user);
+        } else {
+            throw new UserNotFoundException("User not found with id: " + userId);
+        }
+        return null;
+    }
+    public class UserNotFoundException extends RuntimeException {
+        public UserNotFoundException(String message) {
+            super(message);
+        }
     }
 }
 

@@ -2,9 +2,12 @@ package com.api.requesttracker.controllers;
 
 import ch.qos.logback.core.model.Model;
 import com.api.requesttracker.dto.PasswordResetRequestDTO;
+import com.api.requesttracker.entity.User;
 import com.api.requesttracker.services.PasswordResetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/passwordReset")
@@ -36,5 +39,9 @@ public class PasswordResetController {
         // Handle the form submission using the provided token and new password
         passwordResetService.resetPassword(token, newPassword);
         return "Password Reseted Successfully"; // Redirect to a success page or handle accordingly
+    }
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestParam Long userId, @RequestParam String newPassword) {
+       return passwordResetService.changePassword(userId,newPassword);
     }
 }
