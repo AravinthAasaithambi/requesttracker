@@ -60,27 +60,6 @@ public class RequestsController {
         return ResponseEntity.ok().body(result).getBody();
     }
 
-    @PostMapping(value = "/createRequest" ,consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public Requests createRequests(@RequestParam("assignToId") Long assignToId,
-                                   @RequestParam("description") String description,
-                                   @RequestParam("file") MultipartFile file,
-                                   @RequestParam("imageFile") MultipartFile imageFile,
-                                   @RequestParam("priority")Requests.Priority priority,
-                                   @RequestParam("status") Requests.Status status,
-                                   @RequestParam("title") String title,
-                                   @RequestParam("videoLink") String videoLink){
-        logger.info("API for Creating a new Request");
-        Requests request =requestService.createRequests(assignToId,description,file,imageFile,priority,status,title,videoLink);
-        if(request.getAssignedToID().equals(null)) {
-            mailService.newRequestToAdmin(request);
-        } else {
-            mailService.requestAssignEmail(request);
-            mailService.newRequestToAdmin(request);
-        }
-        logger.info("New Request Creation API Executed");
-        return ResponseEntity.ok().body(request).getBody();
-    }
 
     @PutMapping("/updateRequest")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -98,82 +77,5 @@ public class RequestsController {
         logger.info("Delete API Executed");
         return ResponseEntity.ok().body(requestService.deleteRequest(requestId)).getBody();
     }
-
-    @GetMapping("/getRequestAssingnedRequestByUser")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public List<Requests> getRequestAssingnedRequestByUser() {
-        logger.info("API to Get Request Assigned By User");
-        List<Requests> result=requestService.assingnedRequestByUser();
-        logger.info("API Executed");
-        return ResponseEntity.ok().body(result).getBody();
-    }
-    @GetMapping("/getRequestAssingnedRequestToUser")
-    @PreAuthorize("hasRole('USER')")
-    public List<Requests> getRequestAssingnedRequestForUser() {
-        logger.info("API to Get Request Assigned to User");
-        List<Requests> result=requestService.assingnedRequestForUser();
-        logger.info("API Executed");
-        return ResponseEntity.ok().body(result).getBody();
-    }
-    @PutMapping("/upateStatus")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public Requests upateStatus( @RequestParam("requestid") Long requestid ,@RequestParam("status") Requests.Status status){
-        logger.info("API to Update Status of a Request");
-        Requests result=requestService.changeStatus(requestid ,status);
-        logger.info("API Executed");
-        return ResponseEntity.ok().body(result).getBody();
-    }
-    @PutMapping("/updatePriority")
-    @PreAuthorize("hasRole('ADMIN')")
-    public Requests updatePriority( @RequestParam("requestid") Long requestid ,@RequestParam("status") Requests.Priority priority){
-        logger.info("API to Update Priority of a Request");
-        Requests result=requestService.changePriority(requestid,priority);
-        logger.info("API Executed");
-        return ResponseEntity.ok().body(result).getBody();
-    }
-    @GetMapping("/getAnalysisReport")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public RequestAnalysisCountDTO getAnalysisReport() {
-        logger.info("API to Get Analysis of Request");
-        RequestAnalysisCountDTO result=requestService.getAnnalysisReport();
-        logger.info("API Executed");
-        return ResponseEntity.ok().body(result).getBody();
-    }
-    @GetMapping("/getAnalysisReportDateRange")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public RequestAnalysisCountDTO getAnalysisReportDateRange(@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate edDate) {
-        logger.info("API to Get Analysis Report Based on Date Range of a Request");
-        RequestAnalysisCountDTO result=requestService.getAnnalysisReportDateRange(startDate,edDate);
-        logger.info("API Executed");
-        return ResponseEntity.ok().body(result).getBody();
-    }
-    @PutMapping("/assignRequest")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String assignRequest( @RequestParam("userId") Long userId, @RequestParam("requestId") Long requestId ){
-        logger.info("API to Assign a new Request ");
-        String result=requestService.assignRequest(userId,requestId);
-        if (result.equalsIgnoreCase("Request assigned successfully.")){
-            Requests request = requestService.getRequestById(requestId);
-            logger.info("Mailer Functionality inform User about Request");
-            mailService.requestAssignEmail(request);
-        }
-        logger.info("API Executed");
-        return ResponseEntity.ok().body(result).getBody();
-    }
-
-    @PutMapping("/cancelRequest")
-    @PreAuthorize("hasRole('USER')")
-    public Requests cancelRequest( @RequestParam("requestId") Long requestId ){
-        logger.info("Cancel request API called for cancelling the Request Id" + requestId);
-        Requests result=requestService.rejectRequest(requestId);
-        UserDetailsImpl userdetail= userSession.getUserDetails();
-        Long rejectedByUserId = userdetail.getId();
-        logger.info("Request Has been Cancelled");
-        logger.info("Mailer Called for informing Cancellation to Admin");
-        mailService.cancelRequest(rejectedByUserId,result);
-        return ResponseEntity.ok().body(result).getBody();
-    }
-
-
 
 }

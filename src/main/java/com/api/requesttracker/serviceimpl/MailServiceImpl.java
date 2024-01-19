@@ -112,7 +112,11 @@ public class MailServiceImpl extends EmailService {
         Long assignedTo = request.getAssignedToID();
         String assignedByName = user.stream().filter(a -> a.getId().equals(requestId)).findFirst().map(User::getUsername).orElse("Unknown Assigned By Name");
         String assignedtoName = user.stream().filter(a -> a.getId().equals(assignedTo)).findFirst().map(User::getUsername).orElse("No Users");
-        String email= user.stream().filter(a -> a.getId().equals(requestId)).findFirst().map(User::getEmail).orElse("No Users");
+         String email = user.stream()
+                .filter(a -> a.getRoles().contains("ROLE_ADMIN"))
+                .findFirst()
+                .map(User::getEmail)
+                .orElse("No Users");
         //String email = "aravinth.a@telliant.net";
         String replacedEmailContent = emailContent
                 .replace("[[Request ID]]", request.getRequestID().toString())

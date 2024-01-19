@@ -22,30 +22,12 @@ public interface RequestService  {
 
     /*This method specifies to find all Request*/
     List<Requests> getAllRequest();
-    /*This method specifies to create one single Request*/
-    Requests createRequests(Long assignToId, String description, MultipartFile file, MultipartFile imageFile,
-                            Requests.Priority priority, Requests.Status status, String title, String videoLink);
 
     /*This method specifies to Update one single Request*/
     Requests updateRequest(Requests request);
 
     String deleteRequest(Long id);
 
-    Requests changeStatus(Long id, Requests.Status status);
-
-    Requests changePriority(Long id, Requests.Priority priority);
-
-    List<Requests> assingnedRequestForUser();
-
-    List<Requests> assingnedRequestByUser();
-
-    RequestAnalysisCountDTO getAnnalysisReport();
-
-    RequestAnalysisCountDTO getAnnalysisReportDateRange(LocalDate startDate, LocalDate endDate);
-
-    String assignRequest(Long userId, Long requestid);
-
-    Requests rejectRequest(Long requestId);
 }
 
 
