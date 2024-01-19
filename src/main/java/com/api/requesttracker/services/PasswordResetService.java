@@ -9,5 +9,5 @@ public interface PasswordResetService {
 
     void resetPassword(String token, String newPassword);
 
-    ResponseEntity<?> changePassword(Long userId, String newPassword);
+    ResponseEntity<?> changePassword(Long userId, String newPassword, String oldPassword);
 }

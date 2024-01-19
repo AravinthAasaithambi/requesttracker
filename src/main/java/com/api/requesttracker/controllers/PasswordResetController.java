@@ -41,7 +41,7 @@ public class PasswordResetController {
         return "Password Reseted Successfully"; // Redirect to a success page or handle accordingly
     }
     @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(@RequestParam Long userId, @RequestParam String newPassword) {
-       return passwordResetService.changePassword(userId,newPassword);
+    public ResponseEntity<?> changePassword(@RequestParam Long userId, @RequestParam String newPassword, @RequestParam String oldPassword) {
+       return passwordResetService.changePassword(userId,newPassword,oldPassword);
     }
 }

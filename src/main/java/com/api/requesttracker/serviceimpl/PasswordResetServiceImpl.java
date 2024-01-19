@@ -7,6 +7,8 @@ import com.api.requesttracker.services.PasswordResetService;
 import com.api.requesttracker.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,17 +87,31 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     }
 
     @Override
-    public ResponseEntity<?> changePassword(Long userId, String newPassword) {
-        Optional<User> optionalUser = userRepository.findById(userId);
+    public ResponseEntity<?> changePassword(Long userId, String newPassword , String oldPassword) {
+        try {
+            // Retrieve the currently authenticated user
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String username = userDetails.getUsername();
 
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setPassword(encoder.encode(newPassword));
-            userRepository.save(user);
-        } else {
-            throw new UserNotFoundException("User not found with id: " + userId);
+            // Find the user by username
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
+
+            // Check if the old password matches the stored password
+            if (encoder.matches(oldPassword, user.getPassword())) {
+                // If old password is correct, update the password with the new one
+                user.setPassword(encoder.encode(newPassword));
+                userRepository.save(user);
+
+                return ResponseEntity.ok("Password changed successfully");
+            } else {
+                // If old password is incorrect, return an error response
+                return ResponseEntity.status(400).body("Incorrect old password");
+            }
+        } catch (Exception e) {
+            // Handle exceptions appropriately, log them, and return an error response
+            return ResponseEntity.status(500).body("Error changing password");
         }
-        return null;
     }
     public class UserNotFoundException extends RuntimeException {
         public UserNotFoundException(String message) {
