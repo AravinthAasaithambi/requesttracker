@@ -35,12 +35,12 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     }
 
     @Override
-    public void sendResetEmail(PasswordResetRequestDTO resetRequest) {
-        String email = resetRequest.getEmail();
+    public void sendResetEmail(String email) {
+        String mail = email;
         String token = tokenService.generateToken();
 
         // Simulated database entry for token and email association
-        tokenEmailMap.put(token, email);
+        tokenEmailMap.put(token, mail);
 
         // Send reset email
         String resetLink = "https://requesttracker.onrender.com/reset?token=" + token;

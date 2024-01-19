@@ -63,8 +63,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/test/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/api-docs/**").permitAll()
-                                .requestMatchers("/passwordReset/reset").permitAll()  // Permit access to the password reset URL
-                                .requestMatchers("/passwordReset/request").permitAll()
+                                .requestMatchers("/passwordReset/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 

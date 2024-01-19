@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface PasswordResetService {
-    void sendResetEmail(PasswordResetRequestDTO resetRequest);
+    void sendResetEmail(String email);
 
     void resetPassword(String token, String newPassword);
 }

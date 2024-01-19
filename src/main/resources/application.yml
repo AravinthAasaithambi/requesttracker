@@ -1,6 +1,15 @@
 spring:
   application:
     name: requesttracker
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .html
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+
+
 
   jpa:
     hibernate:
